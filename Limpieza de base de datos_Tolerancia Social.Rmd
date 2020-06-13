@@ -1,0 +1,100 @@
+
+Paquetes y Librerías a utilizar
+```{r}
+install.packages("htmltab")
+library(htmltab)
+install.packages("tidyr")
+library(tidyr)
+install.packages("stringr")
+library(stringr)
+install.packages("magrittr")
+library(magrittr)
+```
+
+Base de datos #1
+```{r}
+#importar
+library(readxl)
+base1 <- read_excel("percepciónenlacomunidadrural2018.xlsx")
+```
+
+```{r}
+#elimino lo que no me sirve
+base1=base1[-c(1:4), ]
+base1[,c(1:2)]=NULL
+base1[,c(3:12)]=NULL
+names(base1)= c("Provincia", "IdentificaciónCulturalQuechua")
+base1=base1[-c(1), ]
+base1=base1[-c(197:200), ]
+#quitar el espacio en Provincias
+base1$Provincia= gsub('\\s','', base1$Provincia)
+```
+
+```{r}
+str(base1)
+#convertir a numérica
+base1[,-1]=lapply(base1[,-1], as.numeric)
+#para cuando se hagan los clusters
+base1=na.omit(base1)
+base1[!complete.cases(base1),]
+```
+
+```{r}
+#modificar columna de Provincia
+base1=separate(base1,Provincia,into=c("Provincia",'xtra1','xtra2'), ":" )
+base1[,c(3)]=NULL
+#casos especiales
+base1[67,2]="Provincia Constitucional del Callao"
+base1[146,2]="Tambopata"
+base1[147,2]="Manu"
+base1[148,2]="Tahuamanu"
+#eliminar columna que no sirve
+base1[,c(1)]=NULL
+#cambio de nombre
+names(base1)= c("Provincia", "IdentificaciónCulturalQuechua")
+```
+
+
+Base de datos #2
+```{r}
+#importar
+library(readxl)
+base2 <- read_excel("lenguamaterna2018.xlsx")
+```
+
+```{r}
+#elimino filas que no sirven
+base2=base2[-c(1:4), ]
+base2=base2[-c(198:201), ]
+#elimino columnas que no sirven
+base2[,c(1:2)]=NULL
+base2[,c(3:47)]=NULL
+base2=base2[-c(1), ]
+names(base2)= c("Provincia", "LenguaMaternaQuechua")
+```
+
+```{r}
+str(base2)
+#convertir a numérica
+base2[,-1]=lapply(base2[,-1], as.numeric)
+#para cuando se hagan los clusters
+base2=na.omit(base2)
+base2[!complete.cases(base2),]
+```
+
+```{r}
+#modificar columna de Provincia
+base2=separate(base2,Provincia,into=c("Provincia",'xtra1','xtra2'), ":" )
+base2[,c(3)]=NULL
+#casos especiales
+base2[67,2]="Provincia Constitucional del Callao"
+base2[146,2]="Tambopata"
+base2[147,2]="Manu"
+base2[148,2]="Tahuamanu"
+#eliminar columna que no sirve
+base2[,c(1)]=NULL
+#cambio de nombre
+names(base2)= c("Provincia", "LenguaMaternaQuechua")
+#quitar el espacio en Provincias
+base2$Provincia= gsub('\\s','', base2$Provincia)
+```
